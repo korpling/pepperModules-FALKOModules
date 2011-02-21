@@ -65,7 +65,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		{//for testing the symbolic name has to be set without osgi
 			if (	(this.getSymbolicName()==  null) ||
 					(this.getSymbolicName().equalsIgnoreCase("")))
-				this.setSymbolicName("de.hub.corpling.pepper.modules.FALKOModules");
+				this.setSymbolicName("de.hu_berlin.german.korpling.saltnpepper.pepperModules.FALKOModules");
 		}//for testing the symbolic name has to be set without osgi
 		
 		{//just for logging: to say, that the current module has been loaded
