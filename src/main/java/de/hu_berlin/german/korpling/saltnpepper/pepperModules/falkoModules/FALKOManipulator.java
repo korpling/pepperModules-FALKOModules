@@ -92,8 +92,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 			SDocumentGraph sDocGraph= ((SDocument)sElementId.getSIdentifiableElement()).getSDocumentGraph();
 			if(sDocGraph!= null)
 			{//if document contains a document graph
-				System.out.println("==================> HERE 1");
-				
 				EList<SToken> sTokens= sDocGraph.getSTokens();
 				EList<SToken> emptyTokensAtStart= new BasicEList<SToken>();
 				if (	(sTokens!= null) &&
