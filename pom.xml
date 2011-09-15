@@ -17,7 +17,7 @@
     <version>0.0.2</version>
   </parent>
   <scm>
-    <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/DOTModules/trunk</developerConnection>
+    <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/trunk</developerConnection>
   </scm>
   <build>
     <plugins>
@@ -27,7 +27,7 @@
         <version>2.1</version>
         <configuration>
           <tagBase>
-           https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/DOTModules/tags/
+           https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/
           </tagBase>
           <releaseProfiles>release</releaseProfiles>
           <goals>assembly:single deploy</goals>
