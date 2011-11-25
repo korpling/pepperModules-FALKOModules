@@ -29,7 +29,6 @@ import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperManip
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.modules.SDocumentStructureAccessor;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sCorpusStructure.SDocument;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
@@ -64,7 +63,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		
 		{//for testing the symbolic name has to be set without osgi
 			if (	(this.getSymbolicName()==  null) ||
-					(this.getSymbolicName().equals("")))
+					(this.getSymbolicName().isEmpty()))
 				this.setSymbolicName("de.hu_berlin.german.korpling.saltnpepper.pepperModules.FALKOModules");
 		}//for testing the symbolic name has to be set without osgi
 		
@@ -125,7 +124,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 						{//if textrel exists
 							String text= sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd());
 							if (	(sTextRel.getSStart()< sTextRel.getSEnd()) &&
-									(!text.equalsIgnoreCase(" ")))
+									(!" ".equals(text)))
 							{//if current token is not an empty token and does not contain only a blank	
 								{//create artificial span
 									sSpan= SaltCommonFactory.eINSTANCE.createSSpan();
@@ -144,7 +143,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 										
 										for (SAnnotation sAnno: sToken.getSAnnotations())
 										{//copy annotation and manipulate annotation
-											if (sAnno.getSValueSTEXT().equalsIgnoreCase("<unknown>"))
+											if ("<unknown>".equalsIgnoreCase(sAnno.getSValueSTEXT()))
 												sAnno.setSValue("[unknown]");
 												
 											sNewAnno= SaltCommonFactory.eINSTANCE.createSAnnotation();
@@ -177,8 +176,8 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								sSpanRel.setSToken(sToken);
 								sSpanRel.setSSpan(sSpan);
 								sDocGraph.addSRelation(sSpanRel);
-								SDocumentStructureAccessor accessor= new SDocumentStructureAccessor();
-								accessor.setSDocumentGraph(sDocGraph);
+//								SDocumentStructureAccessor accessor= new SDocumentStructureAccessor();
+//								accessor.setSDocumentGraph(sDocGraph);
 							}//if span is not empty relate token to span via SSpanningRel
 							else
 							{//put token to list emptyTokensAtStart
