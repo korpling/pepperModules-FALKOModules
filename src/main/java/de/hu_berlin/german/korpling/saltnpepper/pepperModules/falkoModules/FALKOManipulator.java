@@ -116,10 +116,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								break;
 							}
 						}//find sTextRel
-//						if (sTextRel.getSStart()== sTextRel.getSEnd())
-//						{//if current token is an empty token
-//							System.out.println("stoken is empty: "+ sToken.getSId());
-//						}//if current token is an empty token
 						if (sTextRel!= null)
 						{//if textrel exists
 							String text= sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd());
@@ -176,8 +172,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								sSpanRel.setSToken(sToken);
 								sSpanRel.setSSpan(sSpan);
 								sDocGraph.addSRelation(sSpanRel);
-//								SDocumentStructureAccessor accessor= new SDocumentStructureAccessor();
-//								accessor.setSDocumentGraph(sDocGraph);
 							}//if span is not empty relate token to span via SSpanningRel
 							else
 							{//put token to list emptyTokensAtStart

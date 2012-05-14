@@ -32,6 +32,7 @@
   </parent>
   <scm>
     <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/pepperModules-FALKOModules-1.1.1</developerConnection>
+    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/pepperModules-FALKOModules-1.1.1</url>
   </scm>
   <distributionManagement>
     <repository>
@@ -52,7 +53,7 @@
            https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/
           </tagBase>
           <releaseProfiles>release</releaseProfiles>
-          <goals>assembly:single deploy</goals>
+          <goals>package assembly:single deploy</goals>
         </configuration>
       </plugin>
       <!-- start: creation of bundle jar -->
