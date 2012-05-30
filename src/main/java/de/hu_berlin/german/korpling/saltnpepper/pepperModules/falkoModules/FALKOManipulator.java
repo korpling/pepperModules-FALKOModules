@@ -60,17 +60,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		{//setting name of module
 			this.name= "FALKOManipulator";
 		}//setting name of module
-		
-		{//for testing the symbolic name has to be set without osgi
-			if (	(this.getSymbolicName()==  null) ||
-					(this.getSymbolicName().isEmpty()))
-				this.setSymbolicName("de.hu_berlin.german.korpling.saltnpepper.pepperModules.FALKOModules");
-		}//for testing the symbolic name has to be set without osgi
-		
-		{//just for logging: to say, that the current module has been loaded
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is created...");
-		}//just for logging: to say, that the current module has been loaded
 	}
 	
 	private static final String KW_POSTFIX= ".";
