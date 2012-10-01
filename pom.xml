@@ -32,7 +32,7 @@
   </parent>
   <scm>
     <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/trunk</developerConnection>
-    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/pepper/tags/pepper-1.1.3/pepper-parentModule/pepperModules-FALKOModules</url>
+    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/trunk</url>
   </scm>
   <distributionManagement>
     <repository>
