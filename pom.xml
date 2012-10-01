@@ -5,20 +5,43 @@
   <artifactId>pepperModules-FALKOModules</artifactId>
   <version>1.1.2</version>
   <packaging>bundle</packaging>
+  
+  <description>This project provides a Pepper manipulator for FALKO data.</description>
+  <url>https://korpling.german.hu-berlin.de/p/projects/peppermodules-falkomodules</url>
+  <issueManagement>
+  	<system>Redmine</system>
+  	<url>https://korpling.german.hu-berlin.de/p/projects/peppermodules-falkomodules/issues</url>
+  </issueManagement>
+  <ciManagement>
+  	<system>Jenkins</system>
+  	<url>https://korpling.german.hu-berlin.de/jenkins/</url>
+  </ciManagement>
+  <inceptionYear>2009</inceptionYear>
+
   <repositories>
     <repository>
-      <id>SaltNPepper Repository</id>
-      <url>https://korpling.german.hu-berlin.de/~annis/maven2/saltnpepper/</url>
+      <id>korpling</id>
+      <name>korpling maven repo</name>
+      <url>http://korpling.german.hu-berlin.de/maven2</url>
     </repository>
   </repositories>
   <parent>
     <groupId>de.hu_berlin.german.korpling.saltnpepper</groupId>
     <artifactId>pepper-parentModule</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.4</version>
   </parent>
   <scm>
     <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/pepperModules-FALKOModules-1.1.2</developerConnection>
+    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/pepperModules-FALKOModules-1.1.2</url>
   </scm>
+  <distributionManagement>
+    <repository>
+      <id>korpling</id>
+      <name>korpling maven repo</name>
+      <url>file:///srv/www/maven2/</url>
+      <!-- <url>scpexe://korpling.german.hu-berlin.de/srv/www/maven2/</url>-->
+    </repository>
+  </distributionManagement>
   <build>
     <plugins>
       <!-- start: Plugin for automatic releasing -->
@@ -30,7 +53,7 @@
            https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/
           </tagBase>
           <releaseProfiles>release</releaseProfiles>
-          <goals>assembly:single deploy</goals>
+          <goals>package assembly:single deploy</goals>
         </configuration>
       </plugin>
       <!-- start: creation of bundle jar -->
