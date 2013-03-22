@@ -17,15 +17,13 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.log.LogService;
 
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperExceptions.PepperModuleException;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperManipulator;
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
@@ -50,7 +48,6 @@ import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SLayer;
  *
  */
 @Component(name="FALKOManipulatorComponent", factory="PepperManipulatorComponentFactory")
-@Service(value=PepperManipulator.class)
 public class FALKOManipulator extends PepperManipulatorImpl 
 {
 	public FALKOManipulator()
