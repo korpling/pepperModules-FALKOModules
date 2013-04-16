@@ -17,15 +17,13 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.log.LogService;
 
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperExceptions.PepperModuleException;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperManipulator;
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
@@ -50,7 +48,6 @@ import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SLayer;
  *
  */
 @Component(name="FALKOManipulatorComponent", factory="PepperManipulatorComponentFactory")
-@Service(value=PepperManipulator.class)
 public class FALKOManipulator extends PepperManipulatorImpl 
 {
 	public FALKOManipulator()
@@ -60,17 +57,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		{//setting name of module
 			this.name= "FALKOManipulator";
 		}//setting name of module
-		
-		{//for testing the symbolic name has to be set without osgi
-			if (	(this.getSymbolicName()==  null) ||
-					(this.getSymbolicName().isEmpty()))
-				this.setSymbolicName("de.hu_berlin.german.korpling.saltnpepper.pepperModules.FALKOModules");
-		}//for testing the symbolic name has to be set without osgi
-		
-		{//just for logging: to say, that the current module has been loaded
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is created...");
-		}//just for logging: to say, that the current module has been loaded
 	}
 	
 	private static final String KW_POSTFIX= ".";
@@ -116,10 +102,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								break;
 							}
 						}//find sTextRel
-//						if (sTextRel.getSStart()== sTextRel.getSEnd())
-//						{//if current token is an empty token
-//							System.out.println("stoken is empty: "+ sToken.getSId());
-//						}//if current token is an empty token
 						if (sTextRel!= null)
 						{//if textrel exists
 							String text= sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd());
@@ -176,8 +158,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								sSpanRel.setSToken(sToken);
 								sSpanRel.setSSpan(sSpan);
 								sDocGraph.addSRelation(sSpanRel);
-//								SDocumentStructureAccessor accessor= new SDocumentStructureAccessor();
-//								accessor.setSDocumentGraph(sDocGraph);
 							}//if span is not empty relate token to span via SSpanningRel
 							else
 							{//put token to list emptyTokensAtStart
