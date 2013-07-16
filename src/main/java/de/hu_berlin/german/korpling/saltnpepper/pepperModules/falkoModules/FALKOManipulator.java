@@ -19,15 +19,15 @@ package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.log.LogService;
 
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperExceptions.PepperModuleException;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.MAPPING_RESULT;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperMapper;
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperMapperImpl;
+import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sCorpusStructure.SDocument;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpanningRelation;
@@ -59,22 +59,28 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		}//setting name of module
 	}
 	
-	private static final String KW_POSTFIX= ".";
-	private static final String KW_WORD= "word";
 	/**
-	 * This method is called by method start() of superclass PepperManipulator, if the method was not overriden
-	 * by the current class. If this is not the case, this method will be called for every document which has
-	 * to be processed.
-	 * @param sElementId the id value for the current document or corpus to process  
+	 * Creates a mapper of type {@link PAULA2SaltMapper}.
+	 * {@inheritDoc PepperModule#createPepperMapper(SElementId)}
 	 */
 	@Override
-	public void start(SElementId sElementId) throws PepperModuleException 
+	public PepperMapper createPepperMapper(SElementId sElementId)
 	{
-		if (	(sElementId!= null) &&
-				(sElementId.getSIdentifiableElement()!= null) &&
-				((sElementId.getSIdentifiableElement() instanceof SDocument)))
-		{//only if given sElementId belongs to an object of type SDocument or SCorpus	
-			SDocumentGraph sDocGraph= ((SDocument)sElementId.getSIdentifiableElement()).getSDocumentGraph();
+		FalkoMapper mapper= new FalkoMapper();
+		return(mapper);
+	}
+	
+	private class FalkoMapper extends PepperMapperImpl{
+		private static final String KW_POSTFIX= ".";
+		private static final String KW_WORD= "word";
+		/**
+		 * This method maps a Salt document to a Treetagger document  
+		 */
+		@Override
+		public MAPPING_RESULT mapSDocument() { 
+			if (getSDocument().getSDocumentGraph()== null)
+				getSDocument().setSDocumentGraph(SaltFactory.eINSTANCE.createSDocumentGraph());
+			SDocumentGraph sDocGraph= getSDocument().getSDocumentGraph();
 			if(sDocGraph!= null)
 			{//if document contains a document graph
 				EList<SToken> sTokens= sDocGraph.getSTokens();
@@ -209,36 +215,8 @@ public class FALKOManipulator extends PepperManipulatorImpl
 				}//create an SLayer for all SNodes
 				
 			}//if document contains a document graph
-		}//only if given sElementId belongs to an object of type SDocument or SCorpus
-		
-	}
-	
-//================================ start: methods used by OSGi
-	/**
-	 * This method is called by the OSGi framework, when a component with this class as class-entry
-	 * gets activated.
-	 * @param componentContext OSGi-context of the current component
-	 */
-	protected void activate(ComponentContext componentContext) 
-	{
-		this.setSymbolicName(componentContext.getBundleContext().getBundle().getSymbolicName());
-		{//just for logging: to say, that the current module has been activated
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is activated...");
-		}//just for logging: to say, that the current module has been activated
-	}
-
-	/**
-	 * This method is called by the OSGi framework, when a component with this class as class-entry
-	 * gets deactivated.
-	 * @param componentContext OSGi-context of the current component
-	 */
-	protected void deactivate(ComponentContext componentContext) 
-	{
-		{//just for logging: to say, that the current module has been deactivated
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is deactivated...");
-		}	
+			return(MAPPING_RESULT.FINISHED);
+		}
 	}
 //================================ start: methods used by OSGi
 }
