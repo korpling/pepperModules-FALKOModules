@@ -27,7 +27,6 @@ import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.Pepper
 import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperMapperImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpanningRelation;
@@ -54,9 +53,9 @@ public class FALKOManipulator extends PepperManipulatorImpl
 	{
 		super();
 		
-		{//setting name of module
-			this.name= "FALKOManipulator";
-		}//setting name of module
+		//setting name of module
+		this.name= "FALKOManipulator";
+		setProperties(new FalkoMaipulatorProperties());
 	}
 	
 	/**
@@ -115,11 +114,11 @@ public class FALKOManipulator extends PepperManipulatorImpl
 									(!" ".equals(text)))
 							{//if current token is not an empty token and does not contain only a blank	
 								{//create artificial span
-									sSpan= SaltCommonFactory.eINSTANCE.createSSpan();
+									sSpan= SaltFactory.eINSTANCE.createSSpan();
 									sDocGraph.addSNode(sSpan);
 								}//create artificial span
 								{//create an artificial annotation with the overlapped text
-									sNewAnno= SaltCommonFactory.eINSTANCE.createSAnnotation();
+									sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
 									sNewAnno.setSName(KW_WORD);
 									sNewAnno.setSValue(sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd()));
 									sSpan.addSAnnotation(sNewAnno);
@@ -134,7 +133,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 											if ("<unknown>".equalsIgnoreCase(sAnno.getSValueSTEXT()))
 												sAnno.setSValue("[unknown]");
 												
-											sNewAnno= SaltCommonFactory.eINSTANCE.createSAnnotation();
+											sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
 											sNewAnno.setSNS(sAnno.getSNS());
 											sNewAnno.setSName(sAnno.getSName());
 											sNewAnno.setSValue(sAnno.getSValueSTEXT());
@@ -149,7 +148,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								{//if there are empty tokens at start, put them to current span
 									for (SToken emptyToken: emptyTokensAtStart)
 									{
-										sSpanRel= SaltCommonFactory.eINSTANCE.createSSpanningRelation();
+										sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
 										sSpanRel.setSToken(emptyToken);
 										sSpanRel.setSSpan(sSpan);
 										sDocGraph.addSRelation(sSpanRel);
@@ -160,7 +159,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							}//if current token is not an empty token and does not contain only a blank
 							if (sSpan!= null)
 							{//if span is not empty relate token to span via SSpanningRel
-								sSpanRel= SaltCommonFactory.eINSTANCE.createSSpanningRelation();
+								sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
 								sSpanRel.setSToken(sToken);
 								sSpanRel.setSSpan(sSpan);
 								sDocGraph.addSRelation(sSpanRel);
@@ -173,8 +172,8 @@ public class FALKOManipulator extends PepperManipulatorImpl
 					}//if textrel exists
 				}//for all tokens do
 				{//create an SLayer for all SNodes
-					SLayer sLayer= SaltCommonFactory.eINSTANCE.createSLayer();
-					sLayer.setSName("falko");
+					SLayer sLayer= SaltFactory.eINSTANCE.createSLayer();
+					sLayer.setSName(((FalkoMaipulatorProperties)getProperties()).getSLayerName());
 					boolean addLayer=false;
 					{//adding tokens to layer
 						for (SToken sToken: sDocGraph.getSTokens())
