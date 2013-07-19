@@ -29,7 +29,7 @@ public class FalkoMaipulatorProperties extends PepperModuleProperties
 {
 	public static final String PREFIX="falkomanipulator.";
 	
-	public static final String PROP_SLAYER_NAME="sLayerName";
+	public static final String PROP_SLAYER_NAME=PREFIX+"sLayerName";
 	
 	public FalkoMaipulatorProperties()
 	{
