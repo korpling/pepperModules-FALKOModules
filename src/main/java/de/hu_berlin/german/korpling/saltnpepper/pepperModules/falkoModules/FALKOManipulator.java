@@ -21,10 +21,10 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.osgi.service.component.annotations.Component;
 
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.MAPPING_RESULT;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperMapper;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperMapperImpl;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.PepperMapper;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperManipulatorImpl;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperMapperImpl;
 import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
@@ -54,7 +54,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		super();
 		
 		//setting name of module
-		this.name= "FALKOManipulator";
+		this.setName("FALKOManipulator");
 		setProperties(new FalkoMaipulatorProperties());
 	}
 	
@@ -76,7 +76,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		 * This method maps a Salt document to a Treetagger document  
 		 */
 		@Override
-		public MAPPING_RESULT mapSDocument() { 
+		public DOCUMENT_STATUS mapSDocument() { 
 			if (getSDocument().getSDocumentGraph()== null)
 				getSDocument().setSDocumentGraph(SaltFactory.eINSTANCE.createSDocumentGraph());
 			SDocumentGraph sDocGraph= getSDocument().getSDocumentGraph();
@@ -214,7 +214,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 				}//create an SLayer for all SNodes
 				
 			}//if document contains a document graph
-			return(MAPPING_RESULT.FINISHED);
+			return(DOCUMENT_STATUS.COMPLETED);
 		}
 	}
 //================================ start: methods used by OSGi

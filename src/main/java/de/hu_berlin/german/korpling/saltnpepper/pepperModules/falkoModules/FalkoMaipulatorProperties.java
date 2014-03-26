@@ -17,8 +17,8 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperModuleProperties;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperModuleProperty;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.PepperModuleProperties;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.PepperModuleProperty;
 
 /**
  * Defines the properties to be used for the {@link EXMARaLDAImporter}. 
