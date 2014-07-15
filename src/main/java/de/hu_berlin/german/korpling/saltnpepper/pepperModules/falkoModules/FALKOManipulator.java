@@ -17,19 +17,16 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Service;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.log.LogService;
+import org.osgi.service.component.annotations.Component;
 
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperExceptions.PepperModuleException;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.PepperManipulator;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.pepperModules.impl.PepperManipulatorImpl;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.PepperMapper;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperManipulatorImpl;
+import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperMapperImpl;
+import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
 import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.SaltCommonFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sCorpusStructure.SDocument;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
 import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpanningRelation;
@@ -50,45 +47,39 @@ import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SLayer;
  *
  */
 @Component(name="FALKOManipulatorComponent", factory="PepperManipulatorComponentFactory")
-@Service(value=PepperManipulator.class)
 public class FALKOManipulator extends PepperManipulatorImpl 
 {
 	public FALKOManipulator()
 	{
 		super();
 		
-		{//setting name of module
-			this.name= "FALKOManipulator";
-		}//setting name of module
-		
-		{//for testing the symbolic name has to be set without osgi
-			if (	(this.getSymbolicName()==  null) ||
-					(this.getSymbolicName().isEmpty()))
-				this.setSymbolicName("de.hu_berlin.german.korpling.saltnpepper.pepperModules.FALKOModules");
-		}//for testing the symbolic name has to be set without osgi
-		
-		{//just for logging: to say, that the current module has been loaded
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is created...");
-		}//just for logging: to say, that the current module has been loaded
+		//setting name of module
+		this.setName("FALKOManipulator");
+		setProperties(new FalkoMaipulatorProperties());
 	}
 	
-	private static final String KW_POSTFIX= ".";
-	private static final String KW_WORD= "word";
 	/**
-	 * This method is called by method start() of superclass PepperManipulator, if the method was not overriden
-	 * by the current class. If this is not the case, this method will be called for every document which has
-	 * to be processed.
-	 * @param sElementId the id value for the current document or corpus to process  
+	 * Creates a mapper of type {@link PAULA2SaltMapper}.
+	 * {@inheritDoc PepperModule#createPepperMapper(SElementId)}
 	 */
 	@Override
-	public void start(SElementId sElementId) throws PepperModuleException 
+	public PepperMapper createPepperMapper(SElementId sElementId)
 	{
-		if (	(sElementId!= null) &&
-				(sElementId.getSIdentifiableElement()!= null) &&
-				((sElementId.getSIdentifiableElement() instanceof SDocument)))
-		{//only if given sElementId belongs to an object of type SDocument or SCorpus	
-			SDocumentGraph sDocGraph= ((SDocument)sElementId.getSIdentifiableElement()).getSDocumentGraph();
+		FalkoMapper mapper= new FalkoMapper();
+		return(mapper);
+	}
+	
+	private class FalkoMapper extends PepperMapperImpl{
+		private static final String KW_POSTFIX= ".";
+		private static final String KW_WORD= "word";
+		/**
+		 * This method maps a Salt document to a Treetagger document  
+		 */
+		@Override
+		public DOCUMENT_STATUS mapSDocument() { 
+			if (getSDocument().getSDocumentGraph()== null)
+				getSDocument().setSDocumentGraph(SaltFactory.eINSTANCE.createSDocumentGraph());
+			SDocumentGraph sDocGraph= getSDocument().getSDocumentGraph();
 			if(sDocGraph!= null)
 			{//if document contains a document graph
 				EList<SToken> sTokens= sDocGraph.getSTokens();
@@ -116,10 +107,6 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								break;
 							}
 						}//find sTextRel
-//						if (sTextRel.getSStart()== sTextRel.getSEnd())
-//						{//if current token is an empty token
-//							System.out.println("stoken is empty: "+ sToken.getSId());
-//						}//if current token is an empty token
 						if (sTextRel!= null)
 						{//if textrel exists
 							String text= sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd());
@@ -127,11 +114,11 @@ public class FALKOManipulator extends PepperManipulatorImpl
 									(!" ".equals(text)))
 							{//if current token is not an empty token and does not contain only a blank	
 								{//create artificial span
-									sSpan= SaltCommonFactory.eINSTANCE.createSSpan();
+									sSpan= SaltFactory.eINSTANCE.createSSpan();
 									sDocGraph.addSNode(sSpan);
 								}//create artificial span
 								{//create an artificial annotation with the overlapped text
-									sNewAnno= SaltCommonFactory.eINSTANCE.createSAnnotation();
+									sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
 									sNewAnno.setSName(KW_WORD);
 									sNewAnno.setSValue(sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd()));
 									sSpan.addSAnnotation(sNewAnno);
@@ -146,7 +133,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 											if ("<unknown>".equalsIgnoreCase(sAnno.getSValueSTEXT()))
 												sAnno.setSValue("[unknown]");
 												
-											sNewAnno= SaltCommonFactory.eINSTANCE.createSAnnotation();
+											sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
 											sNewAnno.setSNS(sAnno.getSNS());
 											sNewAnno.setSName(sAnno.getSName());
 											sNewAnno.setSValue(sAnno.getSValueSTEXT());
@@ -161,7 +148,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								{//if there are empty tokens at start, put them to current span
 									for (SToken emptyToken: emptyTokensAtStart)
 									{
-										sSpanRel= SaltCommonFactory.eINSTANCE.createSSpanningRelation();
+										sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
 										sSpanRel.setSToken(emptyToken);
 										sSpanRel.setSSpan(sSpan);
 										sDocGraph.addSRelation(sSpanRel);
@@ -172,12 +159,10 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							}//if current token is not an empty token and does not contain only a blank
 							if (sSpan!= null)
 							{//if span is not empty relate token to span via SSpanningRel
-								sSpanRel= SaltCommonFactory.eINSTANCE.createSSpanningRelation();
+								sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
 								sSpanRel.setSToken(sToken);
 								sSpanRel.setSSpan(sSpan);
 								sDocGraph.addSRelation(sSpanRel);
-//								SDocumentStructureAccessor accessor= new SDocumentStructureAccessor();
-//								accessor.setSDocumentGraph(sDocGraph);
 							}//if span is not empty relate token to span via SSpanningRel
 							else
 							{//put token to list emptyTokensAtStart
@@ -187,8 +172,8 @@ public class FALKOManipulator extends PepperManipulatorImpl
 					}//if textrel exists
 				}//for all tokens do
 				{//create an SLayer for all SNodes
-					SLayer sLayer= SaltCommonFactory.eINSTANCE.createSLayer();
-					sLayer.setSName("falko");
+					SLayer sLayer= SaltFactory.eINSTANCE.createSLayer();
+					sLayer.setSName(((FalkoMaipulatorProperties)getProperties()).getSLayerName());
 					boolean addLayer=false;
 					{//adding tokens to layer
 						for (SToken sToken: sDocGraph.getSTokens())
@@ -229,36 +214,8 @@ public class FALKOManipulator extends PepperManipulatorImpl
 				}//create an SLayer for all SNodes
 				
 			}//if document contains a document graph
-		}//only if given sElementId belongs to an object of type SDocument or SCorpus
-		
-	}
-	
-//================================ start: methods used by OSGi
-	/**
-	 * This method is called by the OSGi framework, when a component with this class as class-entry
-	 * gets activated.
-	 * @param componentContext OSGi-context of the current component
-	 */
-	protected void activate(ComponentContext componentContext) 
-	{
-		this.setSymbolicName(componentContext.getBundleContext().getBundle().getSymbolicName());
-		{//just for logging: to say, that the current module has been activated
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is activated...");
-		}//just for logging: to say, that the current module has been activated
-	}
-
-	/**
-	 * This method is called by the OSGi framework, when a component with this class as class-entry
-	 * gets deactivated.
-	 * @param componentContext OSGi-context of the current component
-	 */
-	protected void deactivate(ComponentContext componentContext) 
-	{
-		{//just for logging: to say, that the current module has been deactivated
-			if (this.getLogService()!= null)
-				this.getLogService().log(LogService.LOG_DEBUG,this.getName()+" is deactivated...");
-		}	
+			return(DOCUMENT_STATUS.COMPLETED);
+		}
 	}
 //================================ start: methods used by OSGi
 }
