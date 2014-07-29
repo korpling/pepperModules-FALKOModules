@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>pepperModules-FALKOModules</artifactId>
   <version>1.1.6-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  
   <description>This project provides a Pepper manipulator for FALKO data.</description>
   <url>https://korpling.german.hu-berlin.de/p/projects/peppermodules-falkomodules</url>
   <issueManagement>
-  	<system>Redmine</system>
-  	<url>https://korpling.german.hu-berlin.de/p/projects/peppermodules-falkomodules/issues</url>
+    <system>GitHub</system>
+    <url>https://github.com/korpling/pepperModules-FALKOModules/issues</url>
   </issueManagement>
   <ciManagement>
-  	<system>Jenkins</system>
-  	<url>https://korpling.german.hu-berlin.de/jenkins/</url>
+    <system>Jenkins</system>
+    <url>https://korpling.german.hu-berlin.de/jenkins/</url>
   </ciManagement>
   <inceptionYear>2009</inceptionYear>
-
   <repositories>
     <repository>
       <id>korpling</id>
@@ -30,32 +28,38 @@
     <version>2.0.0</version>
   </parent>
   <scm>
-    <developerConnection>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/trunk</developerConnection>
-    <url>scm:svn:https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/trunk</url>
+    <connection>scm:git:git://github.com/korpling/pepperModules-FALKOModules.git</connection>
+    <developerConnection>scm:git:git@github.com:korpling/pepperModules-FALKOModules.git</developerConnection>
+    <url>https://github.com/korpling/pepperModules-FALKOModules</url>
   </scm>
   <distributionManagement>
     <repository>
       <id>korpling</id>
       <name>korpling maven repo</name>
       <url>file:///srv/www/maven2/</url>
-      <!-- <url>scpexe://korpling.german.hu-berlin.de/srv/www/maven2/</url>-->
     </repository>
   </distributionManagement>
   <build>
     <plugins>
-      <!-- start: Plugin for automatic releasing -->
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <goals>
+              <goal>perform</goal>
+            </goals>
+            <configuration>
+              <pomFileName>pepperModules-FALKOModules/pom.xml</pomFileName>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
-          <tagBase>
-           https://korpling.german.hu-berlin.de/svn/saltnpepper/PepperModules/FALKOModules/tags/
-          </tagBase>
           <releaseProfiles>release</releaseProfiles>
           <goals>package assembly:single deploy</goals>
         </configuration>
       </plugin>
-      <!-- start: creation of bundle jar -->
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -83,9 +87,7 @@
           </instructions>
         </configuration>
       </plugin>
-      <!-- end: creation of bundle jar -->
-      
-            <plugin>
+      <plugin>
         <groupId>com.agilejava.docbkx</groupId>
         <artifactId>docbkx-maven-plugin</artifactId>
         <version>${docbkx-maven-plugin.version}</version>
@@ -96,7 +98,6 @@
               <goal>generate-pdf</goal>
             </goals>
             <configuration>
-              <!-- <sourceDirectory>${project.build.directory}/docbkx</sourceDirectory> -->
               <sourceDirectory>${project.basedir}/src/main/docbkx</sourceDirectory>
               <targetDirectory>${project.build.directory}/manual</targetDirectory>
               <targetFileExtension>${project.version}.pdf</targetFileExtension>
@@ -109,7 +110,6 @@
               <useSvg>true</useSvg>
               <useExtensions>true</useExtensions>
               <sectionAutolabel>true</sectionAutolabel>
-<!--               font configuration -->
               <bodyFontFamily>DejaVu Serif</bodyFontFamily>
               <monospaceFontFamily>DejaVu Sans Mono</monospaceFontFamily>
               <titleFontFamily>DejaVu Sans</titleFontFamily>
@@ -185,8 +185,7 @@
               <useExtensions>true</useExtensions>
               <preProcess>
                 <copy todir="${project.build.directory}/manual/images">
-                  <fileset dir="${basedir}/src/main/docbkx/images">
-                  </fileset>
+                  <fileset dir="${basedir}/src/main/docbkx/images" />
                 </copy>
               </preProcess>
             </configuration>
@@ -196,9 +195,7 @@
         <configuration>
           <xincludeSupported>true</xincludeSupported>
         </configuration>
-                
       </plugin>
-      
       <plugin>
         <groupId>com.agilejava.docbkx</groupId>
         <artifactId>docbkx-fop-support</artifactId>
