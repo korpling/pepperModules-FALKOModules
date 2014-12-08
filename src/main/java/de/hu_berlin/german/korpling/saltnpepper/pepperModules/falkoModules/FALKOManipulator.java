@@ -192,7 +192,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							if (	(sSpan.getSLayers()== null) ||
 									(sSpan.getSLayers().size()==0))
 							{
-								sLayer.getSNodes().add(sSpan);
+								sSpan.getSLayers().add(sLayer);
 								addLayer=true;
 							}
 						}
@@ -203,7 +203,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							if (	(sSpanRel.getSLayers()== null) ||
 									(sSpanRel.getSLayers().size()==0))
 							{
-								sLayer.getSRelations().add(sSpanRel);
+								sSpanRel.getSLayers().add(sLayer);
 								addLayer=true;
 							}
 						}	
