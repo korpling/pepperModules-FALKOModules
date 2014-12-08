@@ -181,7 +181,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							if (	(sToken.getSLayers()== null) ||
 									(sToken.getSLayers().size()==0))
 							{
-								sLayer.getSNodes().add(sToken);
+								sToken.getSLayers().add(sLayer);
 								addLayer=true;
 							}
 						}
