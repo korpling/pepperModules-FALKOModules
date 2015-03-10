@@ -51,7 +51,7 @@ A detailed description of the Pepper workflow can be found on the [Pepper projec
 ### c) Use properties
 ```xml
 <manipulator name="FALKOManipulator">
-  <property key="PROPERTY_NAME">PROPERTY_VALUE</key>
+  <property key="PROPERTY_NAME">PROPERTY_VALUE</property>
 </manipulator>
 ```
 
