@@ -19,6 +19,7 @@ package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.osgi.service.component.annotations.Component;
 
 import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
@@ -55,6 +56,9 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		
 		//setting name of module
 		this.setName("FALKOManipulator");
+		setSupplierContact(URI.createURI("saltnpepper@lists.hu-berlin.de"));
+		setSupplierHomepage(URI.createURI("https://github.com/korpling/pepperModules-FALKOModules"));
+		setDesc("This manipulator was developed especially for the FALKO Corpus. It creates a SSpan-objects for every SToken object in the document. All annotations for STokens will be duplicated and added to the spans. The annotations of the tokens will be renamed from 'annoName' to 'annoName.'. For example a 'pos'-annotation of SToken-object will be renamed to a 'pos.'-annotation. All spans, tokens and spanning relations will be added to an artificial layer named 'falko'. ");
 		setProperties(new FalkoMaipulatorProperties());
 	}
 	
