@@ -17,25 +17,27 @@
  */
 package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
 
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
+import org.corpus_tools.pepper.impl.PepperManipulatorImpl;
+import org.corpus_tools.pepper.impl.PepperMapperImpl;
+import org.corpus_tools.pepper.modules.PepperMapper;
+import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SSpanningRelation;
+import org.corpus_tools.salt.common.STextualRelation;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SLayer;
+import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.Identifier;
+import org.corpus_tools.salt.graph.Relation;
 import org.eclipse.emf.common.util.URI;
 import org.osgi.service.component.annotations.Component;
-
-import de.hu_berlin.german.korpling.saltnpepper.pepper.common.DOCUMENT_STATUS;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.PepperMapper;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperManipulatorImpl;
-import de.hu_berlin.german.korpling.saltnpepper.pepper.modules.impl.PepperMapperImpl;
-import de.hu_berlin.german.korpling.saltnpepper.salt.SaltFactory;
-import de.hu_berlin.german.korpling.saltnpepper.salt.graph.Edge;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SDocumentGraph;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpan;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SSpanningRelation;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.STextualRelation;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCommon.sDocumentStructure.SToken;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SAnnotation;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SElementId;
-import de.hu_berlin.german.korpling.saltnpepper.salt.saltCore.SLayer;
 
 /**
  * This manipulator was developed especially for the FALKO Corpus.
@@ -64,10 +66,10 @@ public class FALKOManipulator extends PepperManipulatorImpl
 	
 	/**
 	 * Creates a mapper of type {@link PAULA2SaltMapper}.
-	 * {@inheritDoc PepperModule#createPepperMapper(SElementId)}
+	 * {@inheritDoc PepperModule#createPepperMapper(Identifier)}
 	 */
 	@Override
-	public PepperMapper createPepperMapper(SElementId sElementId)
+	public PepperMapper createPepperMapper(Identifier sElementId)
 	{
 		FalkoMapper mapper= new FalkoMapper();
 		return(mapper);
@@ -81,13 +83,13 @@ public class FALKOManipulator extends PepperManipulatorImpl
 		 */
 		@Override
 		public DOCUMENT_STATUS mapSDocument() { 
-			if (getSDocument().getSDocumentGraph()== null)
-				getSDocument().setSDocumentGraph(SaltFactory.eINSTANCE.createSDocumentGraph());
-			SDocumentGraph sDocGraph= getSDocument().getSDocumentGraph();
+			if (getDocument().getDocumentGraph()== null)
+				getDocument().setDocumentGraph(SaltFactory.createSDocumentGraph());
+			SDocumentGraph sDocGraph= getDocument().getDocumentGraph();
 			if(sDocGraph!= null)
 			{//if document contains a document graph
-				EList<SToken> sTokens= sDocGraph.getSTokens();
-				EList<SToken> emptyTokensAtStart= new BasicEList<SToken>();
+				List<SToken> sTokens= sDocGraph.getTokens();
+				List<SToken> emptyTokensAtStart= new ArrayList<SToken>();
 				if (	(sTokens!= null) &&
 						(sTokens.size()> 0))
 				{		
@@ -100,51 +102,52 @@ public class FALKOManipulator extends PepperManipulatorImpl
 					//stores the new annotation taken from token set to span
 					SAnnotation sNewAnno= null;
 					for (int i=0; i < sTokens.size(); i++)
-					{//for all tokens do
+					{
+						//for all tokens do
 						sToken= sTokens.get(i);
-						EList<Edge> outEdges= sDocGraph.getOutEdges(sToken.getSId());
-						for (Edge outEdge: outEdges)
+						List<SRelation<SNode, SNode>> outRelations= sDocGraph.getOutRelations(sToken.getId());
+						for (Relation outRelation: outRelations)
 						{//find sTextRel
-							if (outEdge instanceof STextualRelation)
+							if (outRelation instanceof STextualRelation)
 							{
-								sTextRel= (STextualRelation) outEdge;
+								sTextRel= (STextualRelation) outRelation;
 								break;
 							}
 						}//find sTextRel
 						if (sTextRel!= null)
 						{//if textrel exists
-							String text= sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd());
-							if (	(sTextRel.getSStart()< sTextRel.getSEnd()) &&
+							String text= sTextRel.getTarget().getText().substring(sTextRel.getStart(), sTextRel.getEnd());
+							if (	(sTextRel.getStart()< sTextRel.getEnd()) &&
 									(!" ".equals(text)))
 							{//if current token is not an empty token and does not contain only a blank	
 								{//create artificial span
-									sSpan= SaltFactory.eINSTANCE.createSSpan();
-									sDocGraph.addSNode(sSpan);
+									sSpan= SaltFactory.createSSpan();
+									sDocGraph.addNode(sSpan);
 								}//create artificial span
 								{//create an artificial annotation with the overlapped text
-									sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
-									sNewAnno.setSName(KW_WORD);
-									sNewAnno.setSValue(sTextRel.getSTextualDS().getSText().substring(sTextRel.getSStart(), sTextRel.getSEnd()));
-									sSpan.addSAnnotation(sNewAnno);
+									sNewAnno= SaltFactory.createSAnnotation();
+									sNewAnno.setName(KW_WORD);
+									sNewAnno.setValue(sTextRel.getTarget().getText().substring(sTextRel.getStart(), sTextRel.getEnd()));
+									sSpan.addAnnotation(sNewAnno);
 								}//create an artificial annotation with the overlapped text
 								{//copy all annotations from token to span
-									if (	(sToken.getSAnnotations()!= null)&&
-											(sToken.getSAnnotations().size()> 0))
+									if (	(sToken.getAnnotations()!= null)&&
+											(sToken.getAnnotations().size()> 0))
 									{//if annotations exist	
 										
-										for (SAnnotation sAnno: sToken.getSAnnotations())
+										for (SAnnotation sAnno: sToken.getAnnotations())
 										{//copy annotation and manipulate annotation
-											if ("<unknown>".equalsIgnoreCase(sAnno.getSValueSTEXT()))
-												sAnno.setSValue("[unknown]");
+											if ("<unknown>".equalsIgnoreCase(sAnno.getValue_STEXT()))
+												sAnno.setValue("[unknown]");
 												
-											sNewAnno= SaltFactory.eINSTANCE.createSAnnotation();
-											sNewAnno.setSNS(sAnno.getSNS());
-											sNewAnno.setSName(sAnno.getSName());
-											sNewAnno.setSValue(sAnno.getSValueSTEXT());
+											sNewAnno= SaltFactory.createSAnnotation();
+											sNewAnno.setNamespace(sAnno.getNamespace());
+											sNewAnno.setName(sAnno.getName());
+											sNewAnno.setValue(sAnno.getValue_STEXT());
 											//change the name of the old annotation
-											sAnno.setSName(sAnno.getSName()+ KW_POSTFIX);
+											sAnno.setName(sAnno.getName()+ KW_POSTFIX);
 											
-											sSpan.addSAnnotation(sNewAnno);
+											sSpan.addAnnotation(sNewAnno);
 										}//copy annotation and manipulate annotation
 									}//if annotations exist
 								}//copy all annotations from token to span
@@ -152,10 +155,10 @@ public class FALKOManipulator extends PepperManipulatorImpl
 								{//if there are empty tokens at start, put them to current span
 									for (SToken emptyToken: emptyTokensAtStart)
 									{
-										sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
-										sSpanRel.setSToken(emptyToken);
-										sSpanRel.setSSpan(sSpan);
-										sDocGraph.addSRelation(sSpanRel);
+										sSpanRel= SaltFactory.createSSpanningRelation();
+										sSpanRel.setTarget(emptyToken);
+										sSpanRel.setSource(sSpan);
+										sDocGraph.addRelation(sSpanRel);
 									}
 									//remove all entries from empty token list
 									emptyTokensAtStart.clear();
@@ -163,10 +166,10 @@ public class FALKOManipulator extends PepperManipulatorImpl
 							}//if current token is not an empty token and does not contain only a blank
 							if (sSpan!= null)
 							{//if span is not empty relate token to span via SSpanningRel
-								sSpanRel= SaltFactory.eINSTANCE.createSSpanningRelation();
-								sSpanRel.setSToken(sToken);
-								sSpanRel.setSSpan(sSpan);
-								sDocGraph.addSRelation(sSpanRel);
+								sSpanRel= SaltFactory.createSSpanningRelation();
+								sSpanRel.setTarget(sToken);
+								sSpanRel.setSource(sSpan);
+								sDocGraph.addRelation(sSpanRel);
 							}//if span is not empty relate token to span via SSpanningRel
 							else
 							{//put token to list emptyTokensAtStart
@@ -176,45 +179,45 @@ public class FALKOManipulator extends PepperManipulatorImpl
 					}//if textrel exists
 				}//for all tokens do
 				{//create an SLayer for all SNodes
-					SLayer sLayer= SaltFactory.eINSTANCE.createSLayer();
-					sLayer.setSName(((FalkoMaipulatorProperties)getProperties()).getSLayerName());
+					SLayer sLayer= SaltFactory.createSLayer();
+					sLayer.setName(((FalkoMaipulatorProperties)getProperties()).getSLayerName());
 					boolean addLayer=false;
 					{//adding tokens to layer
-						for (SToken sToken: sDocGraph.getSTokens())
+						for (SToken sToken: sDocGraph.getTokens())
 						{
-							if (	(sToken.getSLayers()== null) ||
-									(sToken.getSLayers().size()==0))
+							if (	(sToken.getLayers()== null) ||
+									(sToken.getLayers().size()==0))
 							{
-								sToken.getSLayers().add(sLayer);
+								sToken.getLayers().add(sLayer);
 								addLayer=true;
 							}
 						}
 					}//adding tokens to layer
 					{//adding spans to layer
-						for (SSpan sSpan: sDocGraph.getSSpans())
+						for (SSpan sSpan: sDocGraph.getSpans())
 						{
-							if (	(sSpan.getSLayers()== null) ||
-									(sSpan.getSLayers().size()==0))
+							if (	(sSpan.getLayers()== null) ||
+									(sSpan.getLayers().size()==0))
 							{
-								sSpan.getSLayers().add(sLayer);
+								sSpan.getLayers().add(sLayer);
 								addLayer=true;
 							}
 						}
 					}//adding spans to layer
 					{//adding SpanningRelation to layer
-						for (SSpanningRelation sSpanRel: sDocGraph.getSSpanningRelations())
+						for (SSpanningRelation sSpanRel: sDocGraph.getSpanningRelations())
 						{
-							if (	(sSpanRel.getSLayers()== null) ||
-									(sSpanRel.getSLayers().size()==0))
+							if (	(sSpanRel.getLayers()== null) ||
+									(sSpanRel.getLayers().size()==0))
 							{
-								sSpanRel.getSLayers().add(sLayer);
+								sSpanRel.getLayers().add(sLayer);
 								addLayer=true;
 							}
 						}	
 					}//adding SpanningRelation to layer
 					
 					if (addLayer)
-						sDocGraph.getSLayers().add(sLayer);
+						sDocGraph.getLayers().add(sLayer);
 				}//create an SLayer for all SNodes
 				
 			}//if document contains a document graph
