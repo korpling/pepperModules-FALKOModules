@@ -15,7 +15,7 @@
  *
  *
  */
-package de.hu_berlin.german.korpling.saltnpepper.pepperModules.falkoModules;
+package org.corpus_tools.peppermodules.falkoModules;
 
 import java.util.ArrayList;
 import java.util.List;
