@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.corpus-tools</groupId>
     <artifactId>pepper-parentModule</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0</version>
   </parent>
   <artifactId>pepperModules-FALKOModules</artifactId>
   <version>1.1.8-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <description>This project provides a Pepper manipulator for FALKO data.</description>
-  <url>https://korpling.german.hu-berlin.de/p/projects/peppermodules-falkomodules</url>
+  <url>https://github.com/korpling/pepperModules-FALKOModules</url>
   <issueManagement>
     <system>GitHub</system>
     <url>https://github.com/korpling/pepperModules-FALKOModules/issues</url>
@@ -19,199 +19,9 @@
     <url>https://korpling.german.hu-berlin.de/jenkins/</url>
   </ciManagement>
   <inceptionYear>2009</inceptionYear>
-  <repositories>
-    <repository>
-      <id>korpling</id>
-      <name>korpling maven repo</name>
-      <url>http://korpling.german.hu-berlin.de/maven2</url>
-    </repository>
-  </repositories>
   <scm>
     <connection>scm:git:git://github.com/korpling/pepperModules-FALKOModules.git</connection>
     <developerConnection>scm:git:git@github.com:korpling/pepperModules-FALKOModules.git</developerConnection>
     <url>https://github.com/korpling/pepperModules-FALKOModules</url>
   </scm>
-  <distributionManagement>
-    <repository>
-      <id>korpling</id>
-      <name>korpling maven repo</name>
-      <url>file:///srv/www/maven2/</url>
-    </repository>
-  </distributionManagement>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>${maven-release-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>default</id>
-            <goals>
-              <goal>perform</goal>
-            </goals>
-            <configuration>
-              <pomFileName>pepperModules-FALKOModules/pom.xml</pomFileName>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <releaseProfiles>release</releaseProfiles>
-          <goals>package assembly:single deploy</goals>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>${maven-bundle-plugin.version}</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>bundle</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <manifestLocation>${META-INF}</manifestLocation>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <instructions>
-            <Bundle-Name>${project.artifactId}</Bundle-Name>
-            <Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true</Bundle-SymbolicName>
-            <Bundle-Version>${project.version}</Bundle-Version>
-            <Bundle-RequiredExecutionEnvironment>JavaSE-${java.version}</Bundle-RequiredExecutionEnvironment>
-            <Service-Component>${allServiceComponents}</Service-Component>
-            <Include-Resource>{maven-resources}, LICENSE, NOTICE</Include-Resource>
-          </instructions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.agilejava.docbkx</groupId>
-        <artifactId>docbkx-maven-plugin</artifactId>
-        <version>${docbkx-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>pdf</id>
-            <goals>
-              <goal>generate-pdf</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${project.basedir}/src/main/docbkx</sourceDirectory>
-              <targetDirectory>${project.build.directory}/manual</targetDirectory>
-              <targetFileExtension>${project.version}.pdf</targetFileExtension>
-              <includes>manual.xml</includes>
-              <foCustomization>${basedir}/src/main/docbkx/custom.xsl</foCustomization>
-              <highlightSource>true</highlightSource>
-              <admonGraphics>true</admonGraphics>
-              <admonGraphicsPath>${basedir}/src/main/docbkx/images/docbook/</admonGraphicsPath>
-              <admonGraphicsExtension>.svg</admonGraphicsExtension>
-              <useSvg>true</useSvg>
-              <useExtensions>true</useExtensions>
-              <sectionAutolabel>true</sectionAutolabel>
-              <bodyFontFamily>DejaVu Serif</bodyFontFamily>
-              <monospaceFontFamily>DejaVu Sans Mono</monospaceFontFamily>
-              <titleFontFamily>DejaVu Sans</titleFontFamily>
-              <fonts>
-                <font>
-                  <name>DejaVu Sans Mono</name>
-                  <style>normal</style>
-                  <weight>normal</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSansMono.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSansMono-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Serif</name>
-                  <style>normal</style>
-                  <weight>normal</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSerif.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSerif-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Serif</name>
-                  <style>italic</style>
-                  <weight>normal</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSerif-Italic.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSerif-Italic-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Serif</name>
-                  <style>normal</style>
-                  <weight>bold</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSerif-Bold.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSerif-Bold-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Serif</name>
-                  <style>italic</style>
-                  <weight>bold</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSerif-BoldItalic.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSerif-BoldItalic-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Sans</name>
-                  <style>normal</style>
-                  <weight>bold</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSans-Bold.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSans-Bold-metrics.xml</metricsFile>
-                </font>
-                <font>
-                  <name>DejaVu Sans</name>
-                  <style>normal</style>
-                  <weight>normal</weight>
-                  <embedFile>${basedir}/src/main/fonts/DejaVuSans.ttf</embedFile>
-                  <metricsFile>${project.build.directory}/fonts/DejaVuSans-metrics.xml</metricsFile>
-                </font>
-              </fonts>
-            </configuration>
-            <phase>site</phase>
-          </execution>
-          <execution>
-            <id>html</id>
-            <goals>
-              <goal>generate-html</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${project.build.directory}/docbkx</sourceDirectory>
-              <targetDirectory>${project.build.directory}/manual</targetDirectory>
-              <targetFileExtension>${project.version}.html</targetFileExtension>
-              <includes>manual.xml</includes>
-              <highlightSource>true</highlightSource>
-              <admonGraphics>true</admonGraphics>
-              <admonGraphicsPath>${basedir}/src/main/docbkx/images/docbook/</admonGraphicsPath>
-              <admonGraphicsExtension>.svg</admonGraphicsExtension>
-              <useSvg>true</useSvg>
-              <useExtensions>true</useExtensions>
-              <preProcess>
-                <copy todir="${project.build.directory}/manual/images">
-                  <fileset dir="${basedir}/src/main/docbkx/images" />
-                </copy>
-              </preProcess>
-            </configuration>
-            <phase>site</phase>
-          </execution>
-        </executions>
-        <configuration>
-          <xincludeSupported>true</xincludeSupported>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.agilejava.docbkx</groupId>
-        <artifactId>docbkx-fop-support</artifactId>
-        <version>${docbkx-fop-support.version}</version>
-        <executions>
-          <execution>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>${basedir}/src/main/fonts/</sourceDirectory>
-              <ansi>false</ansi>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
