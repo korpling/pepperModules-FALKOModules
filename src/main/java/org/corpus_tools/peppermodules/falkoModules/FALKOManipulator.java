@@ -105,7 +105,7 @@ public class FALKOManipulator extends PepperManipulatorImpl
 					{
 						//for all tokens do
 						sToken= sTokens.get(i);
-						List<SRelation<SNode, SNode>> outRelations= sDocGraph.getOutRelations(sToken.getId());
+						List<SRelation<?, ?>> outRelations= sDocGraph.getOutRelations(sToken.getId());
 						for (Relation outRelation: outRelations)
 						{//find sTextRel
 							if (outRelation instanceof STextualRelation)
